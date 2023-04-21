@@ -1,4 +1,5 @@
 import { RequestHandler, Router } from "express";
+import Logger from "../../utils/Logger";
 
 export type ApplicationRoute = {
   basePath: string;
@@ -22,16 +23,20 @@ export default abstract class AbstractRouter {
   private readonly basePath: string;
   private readonly router: Router;
   private routesToMount: EndpointDescriptor[] = [];
+  private readonly logger: Logger;
 
   constructor({ basePath }: ApplicationRoute) {
+    this.logger = new Logger();
     this.basePath = basePath;
     this.router = Router();
   }
 
   protected addEndpoint(endpointDescriptor: EndpointDescriptor): void {
     this.routesToMount.push(endpointDescriptor);
-    console.log(
-      `New route added to list 'Routes to mount' -> ${this.basePath}${endpointDescriptor.path}`,
+    this.logger.log(
+      `New route added to list 'Routes to mount' -> ${
+        HttpMethods[endpointDescriptor.method]
+      } ${this.basePath}${endpointDescriptor.path}`,
     );
   }
 
@@ -60,14 +65,13 @@ export default abstract class AbstractRouter {
 
   private mount(): void {
     this.routesToMount.forEach(({ handler, method, path }) => {
+      this.logger.log(`Mounting route for ${this.basePath}${path}`);
       this.define({
         handler,
         method,
         path,
       });
     });
-
-    console.log(`Mounting routes for ${this.basePath}`);
   }
 
   public export(): Router {
