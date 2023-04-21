@@ -1,26 +1,12 @@
 import express, { Express, Router, json } from "express";
 import morgan from "morgan";
 
-type ApplicationRoute = {
-  path: string;
-  routeDescriptor: RouterDescriptor;
-};
-
-type RouterDescriptor = {
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  route: Router;
-};
-
 export default class Application {
   private readonly app: Express = express();
   private port: number | undefined;
   private host: string | undefined;
   private dev: boolean = true;
-  private routesToMount: Map<String, RouterDescriptor> = new Map<
-    String,
-    RouterDescriptor
-  >();
-  private isMounted: boolean = false;
+
   private isConfigDone: boolean = false;
 
   constructor() {
@@ -66,31 +52,21 @@ export default class Application {
   }
 
   public use(handler: any): void {
+    if (!this.isConfigDone) {
+      this.config();
+    }
+
     this.app.use(handler);
     if (this.dev) {
       console.log(`New handler register`);
     }
   }
 
-  public addRoute({ path, routeDescriptor }: ApplicationRoute): void {
-    this.routesToMount.set(path, routeDescriptor);
-    if (this.dev) {
-      console.log(`New route added to list 'Routes to mount' -> ${path}`);
+  public mountRoute(route: Router): void {
+    if (!this.isConfigDone) {
+      this.config();
     }
-  }
-
-  public mount(): void {
-    if (this.isMounted) {
-      console.log("Application already did mount");
-      return;
-    }
-
-    this.routesToMount.forEach((router, path) => {
-      this.app.use(router.route);
-      if (this.dev) {
-        console.log(`New route mounted ${router.method} | ${path}`);
-      }
-    });
+    this.app.use(route);
   }
 
   public config(): void {
@@ -111,10 +87,6 @@ export default class Application {
 
     if (!this.host) {
       throw new Error("'host' not defined properly");
-    }
-
-    if (!this.isMounted) {
-      this.mount();
     }
 
     if (!this.isConfigDone) {
