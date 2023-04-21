@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 import Application from "../Application";
 import ApplicationManager from "../manager/ApplicationManager";
-import UserRouter from "../routes/userRouter/UserRouter";
+import UserRouter from "../router/userRouter/UserRouter";
 import RouterManager from "../manager/RouterManager";
 
 dotenv.config();

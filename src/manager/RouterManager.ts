@@ -1,5 +1,5 @@
 import Application from "../Application";
-import { AbstractRouter } from "../routes/abstractRouter";
+import { AbstractRouter } from "../router/abstractRouter";
 import ApplicationManager from "./ApplicationManager";
 
 export default class RouterManager {
