@@ -6,7 +6,12 @@ import RouterManager from "../manager/RouterManager";
 
 dotenv.config();
 
-const app: Application = ApplicationManager.getInstance();
+const applicationManager: ApplicationManager =
+  ApplicationManager.getApplicationInstance();
+
+applicationManager.initializeApplication();
+
+const app: Application = applicationManager.getApplication();
 const routerManager: RouterManager = RouterManager.getInstance();
 
 const userRouter = new UserRouter({
