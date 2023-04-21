@@ -1,15 +1,11 @@
-import morgan from "morgan";
-import Application from "./Application";
-import ApplicationManager from "./manager/ApplicationManager";
-import { Router, json } from "express";
 import * as dotenv from "dotenv";
+import { Router } from "express";
+import Application from "../Application";
+import ApplicationManager from "../manager/ApplicationManager";
 
 dotenv.config();
 
 const app: Application = ApplicationManager.getInstance();
-
-app.use(json());
-app.use(morgan("dev"));
 
 const router = Router();
 
