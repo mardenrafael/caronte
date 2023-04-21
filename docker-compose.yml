@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  node-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: caronte
+    volumes:
+      - ./src:/opt/app/caronte/src
+    ports:
+      - 3000:3000
+    command: npm run start:dev
