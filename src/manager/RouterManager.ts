@@ -4,11 +4,13 @@ import ApplicationManager from "./ApplicationManager";
 
 export default class RouterManager {
   private static instance: RouterManager;
+  private readonly applicationManager: ApplicationManager;
   private readonly app: Application;
   private readonly routes: AbstractRouter[] = [];
 
   private constructor() {
-    this.app = ApplicationManager.getInstance();
+    this.applicationManager = ApplicationManager.getApplicationInstance();
+    this.app = this.applicationManager.getApplication();
   }
 
   public static getInstance(): RouterManager {
