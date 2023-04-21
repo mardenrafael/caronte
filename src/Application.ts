@@ -1,4 +1,5 @@
-import express, { Express, Router } from "express";
+import express, { Express, Router, json } from "express";
+import morgan from "morgan";
 
 type ApplicationRoute = {
   path: string;
@@ -20,6 +21,7 @@ export default class Application {
     RouterDescriptor
   >();
   private isMounted: boolean = false;
+  private isConfigDone: boolean = false;
 
   constructor() {
     const nodeEnv = process.env["NODE_ENV"];
@@ -91,6 +93,17 @@ export default class Application {
     });
   }
 
+  public config(): void {
+    this.app.use(json());
+    this.app.use(morgan("dev"));
+
+    this.isConfigDone = true;
+
+    if (this.dev) {
+      console.log("Config setup done!");
+    }
+  }
+
   public start(): void {
     if (!this.port) {
       throw new Error("'port' not defined properly");
@@ -102,6 +115,10 @@ export default class Application {
 
     if (!this.isMounted) {
       this.mount();
+    }
+
+    if (!this.isConfigDone) {
+      this.config();
     }
 
     this.app.listen(this.port, this.host, () => {
