@@ -16,7 +16,6 @@ export type EndpointDescriptor = {
   method: HttpMethods;
   path: string;
   handler: RequestHandler;
-  param: string;
 };
 
 export default abstract class AbstractRouter {
@@ -36,40 +35,34 @@ export default abstract class AbstractRouter {
     );
   }
 
-  private define({
-    handler,
-    method,
-    param,
-    path,
-  }: EndpointDescriptor): void {
+  private define({ handler, method, path }: EndpointDescriptor): void {
     if (method == HttpMethods.GET) {
-      this.router.get(this.basePath + path + param, handler);
+      this.router.get(this.basePath + path, handler);
       return;
     }
     if (method == HttpMethods.POST) {
-      this.router.post(this.basePath + path + param, handler);
+      this.router.post(this.basePath + path, handler);
       return;
     }
     if (method == HttpMethods.PUT) {
-      this.router.put(this.basePath + path + param, handler);
+      this.router.put(this.basePath + path, handler);
       return;
     }
     if (method == HttpMethods.PATCH) {
-      this.router.patch(this.basePath + path + param, handler);
+      this.router.patch(this.basePath + path, handler);
       return;
     }
     if (method == HttpMethods.DELETE) {
-      this.router.delete(this.basePath + path + param, handler);
+      this.router.delete(this.basePath + path, handler);
       return;
     }
   }
 
   private mount(): void {
-    this.routesToMount.forEach(({ handler, method, param, path }) => {
+    this.routesToMount.forEach(({ handler, method, path }) => {
       this.define({
         handler,
         method,
-        param,
         path,
       });
     });

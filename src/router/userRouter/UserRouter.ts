@@ -20,7 +20,6 @@ export default class UserRouter extends AbstractRouter {
       },
       method: HttpMethods.GET,
       path: "",
-      param: "",
     });
 
     super.addEndpoint({
@@ -31,7 +30,6 @@ export default class UserRouter extends AbstractRouter {
       },
       method: HttpMethods.GET,
       path: "user",
-      param: "?id=3",
     });
   }
 }
