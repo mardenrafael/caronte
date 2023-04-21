@@ -29,7 +29,7 @@ export default class UserRouter extends AbstractRouter {
         });
       },
       method: HttpMethods.GET,
-      path: "user",
+      path: "",
     });
   }
 }
