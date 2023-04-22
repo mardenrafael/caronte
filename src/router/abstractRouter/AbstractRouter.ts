@@ -4,6 +4,7 @@ import Logger from "../../utils/Logger";
 
 export type ApplicationRoute = {
   basePath: string;
+  controller: AbstractController;
 };
 
 export enum HttpMethods {
@@ -25,11 +26,13 @@ export default abstract class AbstractRouter {
   private readonly router: Router;
   private routesToMount: EndpointDescriptor[] = [];
   private readonly logger: Logger;
+  protected readonly controller: AbstractController;
 
-  constructor({ basePath }: ApplicationRoute) {
+  constructor({ basePath, controller }: ApplicationRoute) {
     this.logger = new Logger();
     this.basePath = basePath;
     this.router = Router();
+    this.controller = controller;
   }
 
   protected addEndpoint(endpointDescriptor: EndpointDescriptor): void {
@@ -42,33 +45,47 @@ export default abstract class AbstractRouter {
   }
 
   private define({ controller, method, path }: EndpointDescriptor): void {
+    if (controller.getHandlerListSize() != this.routesToMount.length) {
+      throw new Error(
+        `Controller list of ${controller.getName()} and route list of are of different sizes`,
+      );
+    }
     if (method == HttpMethods.GET) {
-      this.router.get(this.basePath + path, controller.handler);
+      this.router.get(this.basePath + path, controller.getHandler(method));
       return;
     }
     if (method == HttpMethods.POST) {
-      this.router.post(this.basePath + path, controller.handler);
+      this.router.post(
+        this.basePath + path,
+        controller.getHandler(method),
+      );
       return;
     }
     if (method == HttpMethods.PUT) {
-      this.router.put(this.basePath + path, controller.handler);
+      this.router.put(this.basePath + path, controller.getHandler(method));
       return;
     }
     if (method == HttpMethods.PATCH) {
-      this.router.patch(this.basePath + path, controller.handler);
+      this.router.patch(
+        this.basePath + path,
+        controller.getHandler(method),
+      );
       return;
     }
     if (method == HttpMethods.DELETE) {
-      this.router.delete(this.basePath + path, controller.handler);
+      this.router.delete(
+        this.basePath + path,
+        controller.getHandler(method),
+      );
       return;
     }
   }
 
   private mount(): void {
-    this.routesToMount.forEach(({ controller: handler, method, path }) => {
+    this.routesToMount.forEach(({ controller, method, path }) => {
       this.logger.log(`Mounting route for ${this.basePath}${path}`);
       this.define({
-        controller: handler,
+        controller,
         method,
         path,
       });
@@ -76,11 +93,10 @@ export default abstract class AbstractRouter {
   }
 
   public export(): Router {
-    this.setupRoutes();
     this.mount();
 
     return this.router;
   }
 
-  protected abstract setupRoutes(): void;
+  public abstract setupRoutes(): void;
 }
