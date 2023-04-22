@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { UserController } from "../../controller/UserController";
 import AbstractRouter, {
   ApplicationRoute,
   HttpMethods,
@@ -13,23 +13,29 @@ export default class UserRouter extends AbstractRouter {
 
   protected override setupRoutes(): void {
     super.addEndpoint({
-      handler: (_req: Request, res: Response) => {
-        res.json({
-          message: "ok",
-        });
-      },
+      controller: new UserController(),
       method: HttpMethods.GET,
+      path: "",
+    });
+    super.addEndpoint({
+      controller: new UserController(),
+      method: HttpMethods.GET,
+      path: "",
+    });
+    super.addEndpoint({
+      controller: new UserController(),
+      method: HttpMethods.POST,
       path: "",
     });
 
-    super.addEndpoint({
-      handler: (_req: Request, res: Response) => {
-        res.json({
-          message: "ok 2",
-        });
-      },
-      method: HttpMethods.GET,
-      path: "",
-    });
+    // super.addEndpoint({
+    //   controller: (_req: Request, res: Response) => {
+    //     res.json({
+    //       message: "ok 2",
+    //     });
+    //   },
+    //   method: HttpMethods.GET,
+    //   path: "",
+    // });
   }
 }
