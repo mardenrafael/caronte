@@ -1,4 +1,5 @@
-import { RequestHandler, Router } from "express";
+import { Router } from "express";
+import { AbstractController } from "../../controller/AbstractController";
 import Logger from "../../utils/Logger";
 
 export type ApplicationRoute = {
@@ -16,7 +17,7 @@ export enum HttpMethods {
 export type EndpointDescriptor = {
   method: HttpMethods;
   path: string;
-  handler: RequestHandler;
+  controller: AbstractController;
 };
 
 export default abstract class AbstractRouter {
@@ -40,34 +41,34 @@ export default abstract class AbstractRouter {
     );
   }
 
-  private define({ handler, method, path }: EndpointDescriptor): void {
+  private define({ controller, method, path }: EndpointDescriptor): void {
     if (method == HttpMethods.GET) {
-      this.router.get(this.basePath + path, handler);
+      this.router.get(this.basePath + path, controller.handler);
       return;
     }
     if (method == HttpMethods.POST) {
-      this.router.post(this.basePath + path, handler);
+      this.router.post(this.basePath + path, controller.handler);
       return;
     }
     if (method == HttpMethods.PUT) {
-      this.router.put(this.basePath + path, handler);
+      this.router.put(this.basePath + path, controller.handler);
       return;
     }
     if (method == HttpMethods.PATCH) {
-      this.router.patch(this.basePath + path, handler);
+      this.router.patch(this.basePath + path, controller.handler);
       return;
     }
     if (method == HttpMethods.DELETE) {
-      this.router.delete(this.basePath + path, handler);
+      this.router.delete(this.basePath + path, controller.handler);
       return;
     }
   }
 
   private mount(): void {
-    this.routesToMount.forEach(({ handler, method, path }) => {
+    this.routesToMount.forEach(({ controller: handler, method, path }) => {
       this.logger.log(`Mounting route for ${this.basePath}${path}`);
       this.define({
-        handler,
+        controller: handler,
         method,
         path,
       });
