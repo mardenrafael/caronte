@@ -4,7 +4,7 @@ import { HttpMethods } from "../../router/abstractRouter/AbstractRouter";
 export type RequestHandlerDescriptor = {
   handler: RequestHandler;
   method: HttpMethods;
-  name: String;
+  handlerName: String;
   parameters?: String;
 };
 
@@ -38,7 +38,7 @@ export default abstract class AbstractController {
     let foundHandler;
 
     for (const handlerDescriptor of this.definedHandlers) {
-      if (handlerDescriptor.name == handlerName) {
+      if (handlerDescriptor.handlerName == handlerName) {
         foundHandler = handlerDescriptor;
         break;
       }

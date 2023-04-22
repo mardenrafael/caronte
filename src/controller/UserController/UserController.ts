@@ -23,12 +23,12 @@ export default class UserController extends AbstractController {
     this.addHandler({
       handler: this.getUser,
       method: HttpMethods.GET,
-      name: "getUser",
+      handlerName: "getUser",
     });
     this.addHandler({
       handler: this.getUserbyId,
       method: HttpMethods.POST,
-      name: "getUserbyId",
+      handlerName: "getUserbyId",
     });
   }
 }
