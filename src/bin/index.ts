@@ -1,21 +1,14 @@
 import * as dotenv from "dotenv";
-import Application from "../Application";
-import ApplicationManager from "../manager/ApplicationManager";
-import ControllerManager from "../manager/ControllerManager";
-import RouterManager from "../manager/RouterManager";
-import UserRouter from "../router/userRouter/UserRouter";
 import { UserController } from "../controller/UserController";
+import ApplicationManager from "../manager/ApplicationManager";
+import UserRouter from "../router/userRouter/UserRouter";
 
 dotenv.config();
 
 const applicationManager: ApplicationManager =
   ApplicationManager.getApplicationManagerInstance();
-const routerManager: RouterManager =
-  RouterManager.getRouterManagerInstance();
-const controllerManager: ControllerManager =
-  ControllerManager.getControlllerManagerInstance();
 
-const app: Application = applicationManager.getApplicationInstance();
+applicationManager.initializeApplication();
 
 const userController = new UserController();
 const userRouter = new UserRouter({
@@ -23,10 +16,7 @@ const userRouter = new UserRouter({
   controller: userController,
 });
 
-routerManager.add(userRouter);
-controllerManager.add(userController);
+applicationManager.add(userRouter);
+applicationManager.add(userController);
 
-controllerManager.setupAllHandlers();
-routerManager.setupRoute();
-routerManager.mountRoutes();
-app.start();
+applicationManager.start();
