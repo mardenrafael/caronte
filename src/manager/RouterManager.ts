@@ -14,7 +14,7 @@ export default class RouterManager {
     this.app = this.applicationManager.getApplicationInstance();
   }
 
-  public static getInstance(): RouterManager {
+  public static getRouterManagerInstance(): RouterManager {
     if (!this.instance) {
       this.instance = new RouterManager();
     }
@@ -24,6 +24,12 @@ export default class RouterManager {
 
   public add<T extends AbstractRouter>(router: T) {
     this.routes.push(router);
+  }
+
+  public setupRoute(): void {
+    this.routes.forEach(route => {
+      route.setupRoutes();
+    });
   }
 
   public mountRoutes(): void {
