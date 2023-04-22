@@ -11,7 +11,7 @@ export default class ApplicationManager {
     this.logger = new Logger();
   }
 
-  public static getApplicationInstance(): ApplicationManager {
+  public static getApplicationManagerInstance(): ApplicationManager {
     if (!this.instance) {
       this.instance = new ApplicationManager();
     }
@@ -28,7 +28,7 @@ export default class ApplicationManager {
     this.isInitialize = true;
   }
 
-  public getApplication(): Application {
+  public getApplicationInstance(): Application {
     if (!this.isInitialize) {
       this.initializeApplication();
     }

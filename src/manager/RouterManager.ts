@@ -9,8 +9,9 @@ export default class RouterManager {
   private readonly routes: AbstractRouter[] = [];
 
   private constructor() {
-    this.applicationManager = ApplicationManager.getApplicationInstance();
-    this.app = this.applicationManager.getApplication();
+    this.applicationManager =
+      ApplicationManager.getApplicationManagerInstance();
+    this.app = this.applicationManager.getApplicationInstance();
   }
 
   public static getInstance(): RouterManager {
