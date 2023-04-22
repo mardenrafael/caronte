@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { RequestHandler, Router } from "express";
 import { AbstractController } from "../../controller/AbstractController";
 import Logger from "../../utils/Logger";
 
@@ -18,7 +18,7 @@ export enum HttpMethods {
 export type EndpointDescriptor = {
   method: HttpMethods;
   path: string;
-  controller: AbstractController;
+  handler: RequestHandler;
 };
 
 export default abstract class AbstractRouter {
@@ -44,50 +44,36 @@ export default abstract class AbstractRouter {
     );
   }
 
-  private define({ controller, method, path }: EndpointDescriptor): void {
-    if (controller.getHandlerListSize() != this.routesToMount.length) {
-      throw new Error(
-        `Controller list of ${controller.getName()} and route list of are of different sizes`,
-      );
-    }
+  private define({ method, path, handler }: EndpointDescriptor): void {
     if (method == HttpMethods.GET) {
-      this.router.get(this.basePath + path, controller.getHandler(method));
+      this.router.get(this.basePath + path, handler);
       return;
     }
     if (method == HttpMethods.POST) {
-      this.router.post(
-        this.basePath + path,
-        controller.getHandler(method),
-      );
+      this.router.post(this.basePath + path, handler);
       return;
     }
     if (method == HttpMethods.PUT) {
-      this.router.put(this.basePath + path, controller.getHandler(method));
+      this.router.put(this.basePath + path, handler);
       return;
     }
     if (method == HttpMethods.PATCH) {
-      this.router.patch(
-        this.basePath + path,
-        controller.getHandler(method),
-      );
+      this.router.patch(this.basePath + path, handler);
       return;
     }
     if (method == HttpMethods.DELETE) {
-      this.router.delete(
-        this.basePath + path,
-        controller.getHandler(method),
-      );
+      this.router.delete(this.basePath + path, handler);
       return;
     }
   }
 
   private mount(): void {
-    this.routesToMount.forEach(({ controller, method, path }) => {
+    this.routesToMount.forEach(({ method, path, handler }) => {
       this.logger.log(`Mounting route for ${this.basePath}${path}`);
       this.define({
-        controller,
         method,
         path,
+        handler,
       });
     });
   }

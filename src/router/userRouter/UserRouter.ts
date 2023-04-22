@@ -13,19 +13,14 @@ export default class UserRouter extends AbstractRouter {
 
   public override setupRoutes(): void {
     super.addEndpoint({
-      controller: this.controller,
       method: HttpMethods.GET,
       path: "",
+      handler: this.controller.getHandlerByName("getUser"),
     });
     super.addEndpoint({
-      controller: this.controller,
-      method: HttpMethods.GET,
-      path: "",
-    });
-    super.addEndpoint({
-      controller: this.controller,
       method: HttpMethods.POST,
       path: "",
+      handler: this.controller.getHandlerByName("getUserbyId"),
     });
   }
 }
