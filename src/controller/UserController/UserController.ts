@@ -7,34 +7,30 @@ export default class UserController extends AbstractController {
     super(UserController.name);
   }
 
-  private async teste01(_req: Request, res: Response): Promise<void> {
+  public async getUser(_req: Request, res: Response): Promise<void> {
     res.json({
       message: "ok 1",
     });
   }
-  private async teste02(_req: Request, res: Response): Promise<void> {
+
+  public async getUserbyId(_req: Request, res: Response): Promise<void> {
     res.json({
       message: "ok",
     });
   }
-  private async teste03(_req: Request, res: Response): Promise<void> {
-    res.json({
-      message: "ok 3",
-    });
-  }
 
   public override setupHandlers(): void {
-    super.addHandler({
-      handler: this.teste01,
+    this.addHandler({
+      handler: this.getUser,
       method: HttpMethods.GET,
     });
-    super.addHandler({
-      handler: this.teste02,
+    this.addHandler({
+      handler: this.getUserbyId,
       method: HttpMethods.POST,
     });
-    super.addHandler({
-      handler: this.teste03,
-      method: HttpMethods.GET,
+    this.addHandler({
+      handler: this.getUserbyId,
+      method: HttpMethods.POST,
     });
   }
 }
