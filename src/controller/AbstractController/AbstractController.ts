@@ -9,9 +9,11 @@ export type RequestHandlerDescriptor = {
 
 export default abstract class AbstractController {
   private readonly definedHandlers: RequestHandlerDescriptor[];
+  private readonly name: String;
 
-  constructor() {
+  constructor(name: String) {
     this.definedHandlers = [];
+    this.name = name;
   }
 
   public getHandler(method: HttpMethods): RequestHandler {
@@ -35,6 +37,14 @@ export default abstract class AbstractController {
     requestHandlerDescriptor: RequestHandlerDescriptor,
   ): void {
     this.definedHandlers.push(requestHandlerDescriptor);
+  }
+
+  public getHandlerListSize(): Number {
+    return this.definedHandlers.length;
+  }
+
+  public getName(): String {
+    return this.name;
   }
 
   public abstract setupHandlers(): void;

@@ -4,17 +4,22 @@ import { AbstractController } from "../AbstractController";
 
 export default class UserController extends AbstractController {
   constructor() {
-    super();
+    super(UserController.name);
   }
 
   private async teste01(_req: Request, res: Response): Promise<void> {
     res.json({
-      message: "ok",
+      message: "ok 1",
     });
   }
   private async teste02(_req: Request, res: Response): Promise<void> {
     res.json({
       message: "ok",
+    });
+  }
+  private async teste03(_req: Request, res: Response): Promise<void> {
+    res.json({
+      message: "ok 3",
     });
   }
 
@@ -26,6 +31,10 @@ export default class UserController extends AbstractController {
     super.addHandler({
       handler: this.teste02,
       method: HttpMethods.POST,
+    });
+    super.addHandler({
+      handler: this.teste03,
+      method: HttpMethods.GET,
     });
   }
 }

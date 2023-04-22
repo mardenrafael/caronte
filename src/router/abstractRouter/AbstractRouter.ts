@@ -45,6 +45,11 @@ export default abstract class AbstractRouter {
   }
 
   private define({ controller, method, path }: EndpointDescriptor): void {
+    if (controller.getHandlerListSize() != this.routesToMount.length) {
+      throw new Error(
+        `Controller list of ${controller.getName()} and route list of are of different sizes`,
+      );
+    }
     if (method == HttpMethods.GET) {
       this.router.get(this.basePath + path, controller.getHandler(method));
       return;
@@ -77,10 +82,10 @@ export default abstract class AbstractRouter {
   }
 
   private mount(): void {
-    this.routesToMount.forEach(({ controller: handler, method, path }) => {
+    this.routesToMount.forEach(({ controller, method, path }) => {
       this.logger.log(`Mounting route for ${this.basePath}${path}`);
       this.define({
-        controller: handler,
+        controller,
         method,
         path,
       });
