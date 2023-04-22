@@ -26,7 +26,7 @@ const userRouter = new UserRouter({
 routerManager.add(userRouter);
 controllerManager.add(userController);
 
-routerManager.setupRoute();
 controllerManager.setupAllHandlers();
+routerManager.setupRoute();
 routerManager.mountRoutes();
 app.start();
