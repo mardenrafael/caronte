@@ -4,6 +4,7 @@ import { HttpMethods } from "../../router/abstractRouter/AbstractRouter";
 export type RequestHandlerDescriptor = {
   handler: RequestHandler;
   method: HttpMethods;
+  name: String;
   parameters?: String;
 };
 
@@ -33,6 +34,23 @@ export default abstract class AbstractController {
     return foundHandler.handler;
   }
 
+  public getHandlerByName(handlerName: String): RequestHandler {
+    let foundHandler;
+
+    for (const handlerDescriptor of this.definedHandlers) {
+      if (handlerDescriptor.name == handlerName) {
+        foundHandler = handlerDescriptor;
+        break;
+      }
+    }
+
+    if (!foundHandler) {
+      throw new Error("Endpoint not available or does not exist");
+    }
+
+    return foundHandler.handler;
+  }
+
   protected addHandler(
     requestHandlerDescriptor: RequestHandlerDescriptor,
   ): void {
@@ -45,6 +63,10 @@ export default abstract class AbstractController {
 
   public getName(): String {
     return this.name;
+  }
+
+  public getDefinedHandlers(): RequestHandlerDescriptor[] {
+    return this.definedHandlers;
   }
 
   public abstract setupHandlers(): void;

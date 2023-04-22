@@ -7,13 +7,13 @@ export default class UserController extends AbstractController {
     super(UserController.name);
   }
 
-  public async getUser(_req: Request, res: Response): Promise<void> {
+  private async getUser(_req: Request, res: Response): Promise<void> {
     res.json({
       message: "ok 1",
     });
   }
 
-  public async getUserbyId(_req: Request, res: Response): Promise<void> {
+  private async getUserbyId(_req: Request, res: Response): Promise<void> {
     res.json({
       message: "ok",
     });
@@ -23,14 +23,12 @@ export default class UserController extends AbstractController {
     this.addHandler({
       handler: this.getUser,
       method: HttpMethods.GET,
+      name: "getUser",
     });
     this.addHandler({
       handler: this.getUserbyId,
       method: HttpMethods.POST,
-    });
-    this.addHandler({
-      handler: this.getUserbyId,
-      method: HttpMethods.POST,
+      name: "getUserbyId",
     });
   }
 }
