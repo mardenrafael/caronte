@@ -128,3 +128,7 @@ Caso o serviço requisitado estaja fora do ar,
 Caronte response ao front-end dizendo que o serviço esta indisponivel
 
 ### **Esse é um prototipo de como vai ser o funcionamento do caronte, esta sujeito a mudanças**
+
+SCHEMA:
+![image](https://user-images.githubusercontent.com/77984278/234028738-1734820e-f602-4021-9af9-bde273a5da7e.png)
+
