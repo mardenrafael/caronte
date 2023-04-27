@@ -34,27 +34,18 @@ export default class ApplicationManager {
     return this.instance;
   }
 
-  public initializeApplication(): void {
-    if (this.isInitialize) {
-      this.logger.log("Application already initialize");
-      return;
-    }
-
-    this.application = new Application();
-    this.config();
-    this.isInitialize = true;
-  }
-
   public getApplicationInstance(): Application {
     if (!this.isInitialize) {
-      this.initializeApplication();
+      this.application = new Application();
+      this.isInitialize = true;
+
+      this.logger.log("New application instance created");
     }
 
-    this.config();
     return this.application!;
   }
 
-  private config(): void {
+  public config(): void {
     if (!this.application) {
       throw new Error("Application is not load properly");
     }
