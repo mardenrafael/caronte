@@ -1,10 +1,12 @@
-import { AbstractController } from "../controller/AbstractController";
+import { Controller } from "../controller/Controller";
+import Manager from "./Manager";
 
-export default class ControllerManager {
+export default class ControllerManager extends Manager<Controller> {
   private static controllerManagerInstance: ControllerManager;
-  private readonly controllers: AbstractController[];
+  private readonly controllers: Controller[];
 
   private constructor() {
+    super(ControllerManager.name);
     this.controllers = [];
   }
 
@@ -15,13 +17,17 @@ export default class ControllerManager {
 
     return this.controllerManagerInstance;
   }
-  public add<T extends AbstractController>(controller: T): void {
+  public add(controller: Controller): void {
     this.controllers.push(controller);
   }
 
-  public setupAllHandlers(): void {
+  private setupAllHandlers(): void {
     this.controllers.forEach(controller => {
       controller.setupHandlers();
     });
   }
+  public override setup(): void {
+    this.setupAllHandlers();
+  }
+  public override mount(): void {}
 }

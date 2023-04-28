@@ -1,11 +1,14 @@
 import Application from "../Application";
-import { AbstractRouter } from "../router/abstractRouter";
+import { Router } from "../router/Router";
+import Manager from "./Manager";
 
-export default class RouterManager {
+export default class RouterManager extends Manager<Router> {
   private static instance: RouterManager;
-  private readonly routes: AbstractRouter[] = [];
+  private readonly routes: Router[] = [];
 
-  private constructor() {}
+  private constructor() {
+    super(RouterManager.name);
+  }
 
   public static getRouterManagerInstance(): RouterManager {
     if (!this.instance) {
@@ -15,19 +18,26 @@ export default class RouterManager {
     return this.instance;
   }
 
-  public add<T extends AbstractRouter>(router: T) {
+  public override add(router: Router) {
     this.routes.push(router);
   }
 
-  public setupRoute(): void {
+  private setupRoute(): void {
     this.routes.forEach(route => {
       route.setupRoutes();
     });
   }
 
-  public mountRoutes(application: Application): void {
+  private mountRoutes(application: Application): void {
     this.routes.forEach(route => {
       application.mountRoute(route.export());
     });
+  }
+
+  public override setup(): void {
+    this.setupRoute();
+  }
+  public override mount(): void {
+    this.mountRoutes(this.getApplication());
   }
 }

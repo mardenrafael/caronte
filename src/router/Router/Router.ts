@@ -1,10 +1,10 @@
-import { RequestHandler, Router } from "express";
-import { AbstractController } from "../../controller/AbstractController";
+import { RequestHandler, Router as R } from "express";
+import { Controller } from "../../controller/Controller";
 import Logger from "../../utils/Logger";
 
 export type ApplicationRoute = {
   basePath: string;
-  controller: AbstractController;
+  controller: Controller;
 };
 
 export enum HttpMethods {
@@ -21,17 +21,17 @@ export type EndpointDescriptor = {
   handler: RequestHandler;
 };
 
-export default abstract class AbstractRouter {
+export default abstract class Router {
   private readonly basePath: string;
-  private readonly router: Router;
+  private readonly router: R;
   private routesToMount: EndpointDescriptor[] = [];
   private readonly logger: Logger;
-  protected readonly controller: AbstractController;
+  protected readonly controller: Controller;
 
   constructor({ basePath, controller }: ApplicationRoute) {
     this.logger = new Logger();
     this.basePath = basePath;
-    this.router = Router();
+    this.router = R();
     this.controller = controller;
   }
 
@@ -78,9 +78,8 @@ export default abstract class AbstractRouter {
     });
   }
 
-  public export(): Router {
+  public export(): R {
     this.mount();
-
     return this.router;
   }
 

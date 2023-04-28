@@ -8,8 +8,6 @@ dotenv.config();
 const applicationManager: ApplicationManager =
   ApplicationManager.getApplicationManagerInstance();
 
-applicationManager.initializeApplication();
-
 const userController = new UserController();
 const userRouter = new UserRouter({
   basePath: "/user",

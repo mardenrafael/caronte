@@ -4,22 +4,25 @@ import Logger from "../utils/Logger";
 import morgan from "morgan";
 import ControllerManager from "./ControllerManager";
 import RouterManager from "./RouterManager";
-import { AbstractRouter } from "../router/abstractRouter";
-import { AbstractController } from "../controller/AbstractController";
+import { Router } from "../router/Router";
+import { Controller } from "../controller/Controller";
+import dotenv from "dotenv";
+import Manager from "./Manager";
 
-export default class ApplicationManager {
+export default class ApplicationManager extends Manager<Application> {
   private static instance: ApplicationManager;
   private application: Application | undefined;
   private readonly logger: Logger;
   private port!: number;
   private host!: string;
   private isInitialize: boolean = false;
-  private isDevMode: Boolean = false;
-  private isConfig: Boolean = false;
-  private readonly controllerManager: ControllerManager;
-  private readonly routerManager: RouterManager;
+  private isDev: Boolean = false;
+  private isConfigured: Boolean = false;
+  private readonly controllerManager: Manager<Controller>;
+  private readonly routerManager: Manager<Router>;
 
   private constructor() {
+    super(ApplicationManager.name);
     this.logger = new Logger();
     this.controllerManager =
       ControllerManager.getControlllerManagerInstance();
@@ -46,11 +49,13 @@ export default class ApplicationManager {
   }
 
   public config(): void {
+    dotenv.config();
+
     if (!this.application) {
       throw new Error("Application is not load properly");
     }
 
-    if (this.isConfig) {
+    if (this.isConfig()) {
       return;
     }
 
@@ -70,44 +75,42 @@ export default class ApplicationManager {
       throw new Error("Error on load env vars");
     }
 
-    this.port = Number.parseInt(portStr);
-    this.host = host;
+    this.setPort(Number.parseInt(portStr));
+    this.setHost(host);
 
     if (nodeEnv === "development") {
-      this.isDevMode = true;
+      this.setIsDevMode(true);
     } else {
-      this.isDevMode = false;
+      this.setIsDevMode(false);
     }
 
     this.application.use(json());
-    this.application.use(morgan("dev"));
+    this.application.use(morgan("dev")); //mover para middleware
 
-    this.application.setPort(this.port);
-    this.application.setHost(this.host);
+    this.application.setPort(this.getPort());
+    this.application.setHost(this.getHost());
 
-    this.isConfig = true;
-    if (this.isDevMode) {
+    this.setIsConfig(true);
+    if (this.isDevMode()) {
       console.log("Config setup done!");
     }
   }
 
-  public addRouter(router: AbstractRouter): void {
+  public addRouter(router: Router): void {
     this.routerManager.add(router);
   }
 
-  public addController(controller: AbstractController): void {
+  public addController(controller: Controller): void {
     this.controllerManager.add(controller);
   }
 
-  public add<T extends AbstractController | AbstractRouter>(
-    item: T,
-  ): void {
-    if (item instanceof AbstractController) {
+  public add(item: Router | Controller | Application): void {
+    if (item instanceof Controller) {
       this.controllerManager.add(item);
       return;
     }
 
-    if (item instanceof AbstractRouter) {
+    if (item instanceof Router) {
       this.routerManager.add(item);
     }
   }
@@ -117,10 +120,52 @@ export default class ApplicationManager {
       throw new Error("Application is not load properly");
     }
 
-    this.controllerManager.setupAllHandlers();
-    this.routerManager.setupRoute();
-    this.routerManager.mountRoutes(this.application);
-
     this.application.start();
+  }
+
+  public override setup(): void {
+    this.controllerManager.setup();
+    this.routerManager.setup();
+  }
+  public override mount(): void {
+    this.routerManager.mount();
+  }
+
+  public getPort(): number {
+    return this.port;
+  }
+
+  public setPort(port: number): void {
+    this.port = port;
+  }
+
+  public getHost(): string {
+    return this.host;
+  }
+
+  public setHost(host: string): void {
+    this.host = host;
+  }
+
+  public isConfig(): Boolean {
+    return this.isConfigured;
+  }
+  public setIsConfig(value: Boolean): void {
+    this.isConfigured = value;
+  }
+
+  public isDevMode(): Boolean {
+    return this.isDev;
+  }
+  public setIsDevMode(value: Boolean): void {
+    this.isDev = value;
+  }
+
+  public getControllerManager(): Manager<Controller> {
+    return this.controllerManager;
+  }
+
+  public getRouterManager(): Manager<Router> {
+    return this.routerManager;
   }
 }
