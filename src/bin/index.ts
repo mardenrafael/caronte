@@ -16,5 +16,5 @@ const userRouter = new UserRouter({
 
 applicationManager.add(userRouter);
 applicationManager.add(userController);
-
+applicationManager.config();
 applicationManager.start();
