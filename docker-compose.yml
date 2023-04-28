@@ -9,5 +9,18 @@ services:
     volumes:
       - ./src:/opt/app/caronte/src
     ports:
-      - 3000:3000
+      - 3000
     command: npm run start:dev
+
+  web:
+    image: nginx
+    container_name: nginx
+    volumes:
+      - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+
+    command: [nginx, "-g", "daemon off;"]
+
+    depends_on:
+      - node-app
