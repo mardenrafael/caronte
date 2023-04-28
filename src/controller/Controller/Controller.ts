@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { HttpMethods } from "../../router/abstractRouter/AbstractRouter";
+import { HttpMethods } from "../../router/Router/Router";
 
 export type RequestHandlerDescriptor = {
   handler: RequestHandler;
@@ -8,7 +8,7 @@ export type RequestHandlerDescriptor = {
   parameters?: String;
 };
 
-export default abstract class AbstractController {
+export default abstract class Controller {
   private readonly definedHandlers: RequestHandlerDescriptor[];
   private readonly name: String;
 

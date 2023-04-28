@@ -1,9 +1,6 @@
-import AbstractRouter, {
-  ApplicationRoute,
-  HttpMethods,
-} from "../abstractRouter/AbstractRouter";
+import Router, { ApplicationRoute, HttpMethods } from "../Router/Router";
 
-export default class UserRouter extends AbstractRouter {
+export default class UserRouter extends Router {
   constructor({ basePath, controller }: ApplicationRoute) {
     super({
       basePath,

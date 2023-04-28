@@ -1,25 +1,28 @@
 import { json } from "express";
-import Application from "../Application";
-import Logger from "../utils/Logger";
 import morgan from "morgan";
+import Application from "../Application";
+import { Controller } from "../controller/Controller";
+import { Router } from "../router/Router";
+import Logger from "../utils/Logger";
 import ControllerManager from "./ControllerManager";
+import Manager from "./Manager";
 import RouterManager from "./RouterManager";
-import { AbstractRouter } from "../router/abstractRouter";
-import { AbstractController } from "../controller/AbstractController";
+import EnvLoader from "../utils/EnvLoader";
 
-export default class ApplicationManager {
+export default class ApplicationManager extends Manager<Application> {
   private static instance: ApplicationManager;
   private application: Application | undefined;
   private readonly logger: Logger;
   private port!: number;
   private host!: string;
   private isInitialize: boolean = false;
-  private isDevMode: Boolean = false;
-  private isConfig: Boolean = false;
-  private readonly controllerManager: ControllerManager;
-  private readonly routerManager: RouterManager;
+  private isDev: Boolean = false;
+  private isConfigured: Boolean = false;
+  private readonly controllerManager: Manager<Controller>;
+  private readonly routerManager: Manager<Router>;
 
   private constructor() {
+    super(ApplicationManager.name);
     this.logger = new Logger();
     this.controllerManager =
       ControllerManager.getControlllerManagerInstance();
@@ -34,102 +37,121 @@ export default class ApplicationManager {
     return this.instance;
   }
 
-  public initializeApplication(): void {
-    if (this.isInitialize) {
-      this.logger.log("Application already initialize");
-      return;
-    }
-
-    this.application = new Application();
-    this.config();
-    this.isInitialize = true;
-  }
-
   public getApplicationInstance(): Application {
-    if (!this.isInitialize) {
-      this.initializeApplication();
+    if (this.isInitialized() == false) {
+      this.application = new Application();
+
+      this.logger.log("New application instance created");
+      this.setIsInitialized(true);
     }
 
-    this.config();
     return this.application!;
   }
 
-  private config(): void {
-    if (!this.application) {
-      throw new Error("Application is not load properly");
-    }
-
-    if (this.isConfig) {
+  public config(): void {
+    if (this.isConfig()) {
       return;
     }
 
-    const nodeEnv = process.env["NODE_ENV"];
-    const portStr = process.env["PORT"];
-    const host = process.env["HOST"];
-
-    if (!portStr) {
-      throw new Error("Error on load env vars");
+    if (this.isInitialized() == false) {
+      throw new Error("Application is not load properly");
     }
 
-    if (!host) {
-      throw new Error("Error on load env vars");
-    }
+    const portStr = EnvLoader.load("PORT");
+    const host = EnvLoader.load("HOST");
+    const nodeEnv = EnvLoader.load("NODE_ENV");
 
-    if (!nodeEnv) {
-      throw new Error("Error on load env vars");
-    }
-
-    this.port = Number.parseInt(portStr);
-    this.host = host;
+    this.setPort(Number.parseInt(portStr));
+    this.setHost(host);
 
     if (nodeEnv === "development") {
-      this.isDevMode = true;
+      this.setIsDevMode(true);
     } else {
-      this.isDevMode = false;
+      this.setIsDevMode(false);
     }
 
-    this.application.use(json());
-    this.application.use(morgan("dev"));
+    this.application!.use(json());
+    this.application!.use(morgan("dev")); //mover para middleware
 
-    this.application.setPort(this.port);
-    this.application.setHost(this.host);
+    this.application!.setPort(this.getPort());
+    this.application!.setHost(this.getHost());
 
-    this.isConfig = true;
-    if (this.isDevMode) {
-      console.log("Config setup done!");
+    this.setIsConfig(true);
+    if (this.isDevMode()) {
+      this.logger.log("Config setup done!");
     }
   }
 
-  public addRouter(router: AbstractRouter): void {
-    this.routerManager.add(router);
-  }
-
-  public addController(controller: AbstractController): void {
-    this.controllerManager.add(controller);
-  }
-
-  public add<T extends AbstractController | AbstractRouter>(
-    item: T,
-  ): void {
-    if (item instanceof AbstractController) {
+  public add(item: Router | Controller | Application): void {
+    if (item instanceof Controller) {
       this.controllerManager.add(item);
       return;
     }
 
-    if (item instanceof AbstractRouter) {
+    if (item instanceof Router) {
       this.routerManager.add(item);
+      return;
     }
   }
 
   public start(): void {
-    if (!this.application) {
+    if (this.isInitialized() == false) {
       throw new Error("Application is not load properly");
     }
 
-    this.controllerManager.setupAllHandlers();
-    this.routerManager.setupRoute();
-    this.routerManager.mountRoutes(this.application);
+    this.application!.start();
+  }
 
-    this.application.start();
+  public override setup(): void {
+    this.controllerManager.setup();
+    this.routerManager.setup();
+  }
+  public override mount(): void {
+    this.routerManager.mount();
+  }
+
+  public getPort(): number {
+    return this.port;
+  }
+
+  public setPort(port: number): void {
+    this.port = port;
+  }
+
+  public getHost(): string {
+    return this.host;
+  }
+
+  public setHost(host: string): void {
+    this.host = host;
+  }
+
+  public isConfig(): Boolean {
+    return this.isConfigured;
+  }
+  public setIsConfig(value: Boolean): void {
+    this.isConfigured = value;
+  }
+
+  public isDevMode(): Boolean {
+    return this.isDev;
+  }
+  public setIsDevMode(value: Boolean): void {
+    this.isDev = value;
+  }
+
+  public getControllerManager(): Manager<Controller> {
+    return this.controllerManager;
+  }
+
+  public getRouterManager(): Manager<Router> {
+    return this.routerManager;
+  }
+
+  public isInitialized(): boolean {
+    return this.isInitialize;
+  }
+  public setIsInitialized(value: boolean): void {
+    this.isInitialize = value;
   }
 }
