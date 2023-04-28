@@ -48,6 +48,10 @@ export default class ApplicationManager extends Manager<Application> {
     return this.application!;
   }
 
+  public initApplication(): void {
+    this.getApplicationInstance();
+  }
+
   public config(): void {
     if (this.isConfig()) {
       return;
@@ -108,6 +112,10 @@ export default class ApplicationManager extends Manager<Application> {
   }
   public override mount(): void {
     this.routerManager.mount();
+  }
+  public override load(): void {
+    this.controllerManager.load();
+    this.routerManager.load();
   }
 
   public getPort(): number {

@@ -28,4 +28,5 @@ export default class ControllerManager extends Manager<Controller> {
     this.setupAllHandlers();
   }
   public override mount(): void {}
+  public override load(): void {}
 }

@@ -1,5 +1,6 @@
 import Application from "../Application";
 import { Router } from "../router/Router";
+import ApplicationManager from "./ApplicationManager";
 import Manager from "./Manager";
 
 export default class RouterManager extends Manager<Router> {
@@ -7,6 +8,9 @@ export default class RouterManager extends Manager<Router> {
 
   private constructor() {
     super(RouterManager.name);
+    // this.setApplication(
+    //   ApplicationManager.getApplicationManagerInstance().loadApplicationInstance(),
+    // );
   }
 
   public static getRouterManagerInstance(): RouterManager {
@@ -33,10 +37,14 @@ export default class RouterManager extends Manager<Router> {
     });
   }
 
+  public override load(): void {}
+
   public override setup(): void {
     this.setupRoute();
   }
   public override mount(): void {
-    this.mountRoutes(this.getApplication());
+    this.mountRoutes(
+      ApplicationManager.getApplicationManagerInstance().getApplicationInstance(),
+    );
   }
 }

@@ -10,6 +10,7 @@ export default abstract class Manager<T> {
     this.managed = [];
   }
 
+  public abstract load(): void;
   public abstract setup(): void;
   public abstract mount(): void;
   public abstract add(item: T): void;
