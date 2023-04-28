@@ -3,11 +3,9 @@ import Manager from "./Manager";
 
 export default class ControllerManager extends Manager<Controller> {
   private static controllerManagerInstance: ControllerManager;
-  private readonly controllers: Controller[];
 
   private constructor() {
     super(ControllerManager.name);
-    this.controllers = [];
   }
 
   public static getControlllerManagerInstance(): ControllerManager {
@@ -18,11 +16,11 @@ export default class ControllerManager extends Manager<Controller> {
     return this.controllerManagerInstance;
   }
   public add(controller: Controller): void {
-    this.controllers.push(controller);
+    this.managed.push(controller);
   }
 
   private setupAllHandlers(): void {
-    this.controllers.forEach(controller => {
+    this.managed.forEach(controller => {
       controller.setupHandlers();
     });
   }

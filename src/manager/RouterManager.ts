@@ -4,7 +4,6 @@ import Manager from "./Manager";
 
 export default class RouterManager extends Manager<Router> {
   private static instance: RouterManager;
-  private readonly routes: Router[] = [];
 
   private constructor() {
     super(RouterManager.name);
@@ -19,17 +18,17 @@ export default class RouterManager extends Manager<Router> {
   }
 
   public override add(router: Router) {
-    this.routes.push(router);
+    this.managed.push(router);
   }
 
   private setupRoute(): void {
-    this.routes.forEach(route => {
+    this.managed.forEach(route => {
       route.setupRoutes();
     });
   }
 
   private mountRoutes(application: Application): void {
-    this.routes.forEach(route => {
+    this.managed.forEach(route => {
       application.mountRoute(route.export());
     });
   }

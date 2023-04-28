@@ -1,13 +1,13 @@
 import { json } from "express";
-import Application from "../Application";
-import Logger from "../utils/Logger";
 import morgan from "morgan";
-import ControllerManager from "./ControllerManager";
-import RouterManager from "./RouterManager";
-import { Router } from "../router/Router";
+import Application from "../Application";
 import { Controller } from "../controller/Controller";
-import dotenv from "dotenv";
+import { Router } from "../router/Router";
+import Logger from "../utils/Logger";
+import ControllerManager from "./ControllerManager";
 import Manager from "./Manager";
+import RouterManager from "./RouterManager";
+import EnvLoader from "../utils/EnvLoader";
 
 export default class ApplicationManager extends Manager<Application> {
   private static instance: ApplicationManager;
@@ -38,42 +38,28 @@ export default class ApplicationManager extends Manager<Application> {
   }
 
   public getApplicationInstance(): Application {
-    if (!this.isInitialize) {
+    if (this.isInitialized() == false) {
       this.application = new Application();
-      this.isInitialize = true;
 
       this.logger.log("New application instance created");
+      this.setIsInitialized(true);
     }
 
     return this.application!;
   }
 
   public config(): void {
-    dotenv.config();
-
-    if (!this.application) {
-      throw new Error("Application is not load properly");
-    }
-
     if (this.isConfig()) {
       return;
     }
 
-    const nodeEnv = process.env["NODE_ENV"];
-    const portStr = process.env["PORT"];
-    const host = process.env["HOST"];
-
-    if (!portStr) {
-      throw new Error("Error on load env vars");
+    if (this.isInitialized() == false) {
+      throw new Error("Application is not load properly");
     }
 
-    if (!host) {
-      throw new Error("Error on load env vars");
-    }
-
-    if (!nodeEnv) {
-      throw new Error("Error on load env vars");
-    }
+    const portStr = EnvLoader.load("PORT");
+    const host = EnvLoader.load("HOST");
+    const nodeEnv = EnvLoader.load("NODE_ENV");
 
     this.setPort(Number.parseInt(portStr));
     this.setHost(host);
@@ -84,24 +70,16 @@ export default class ApplicationManager extends Manager<Application> {
       this.setIsDevMode(false);
     }
 
-    this.application.use(json());
-    this.application.use(morgan("dev")); //mover para middleware
+    this.application!.use(json());
+    this.application!.use(morgan("dev")); //mover para middleware
 
-    this.application.setPort(this.getPort());
-    this.application.setHost(this.getHost());
+    this.application!.setPort(this.getPort());
+    this.application!.setHost(this.getHost());
 
     this.setIsConfig(true);
     if (this.isDevMode()) {
-      console.log("Config setup done!");
+      this.logger.log("Config setup done!");
     }
-  }
-
-  public addRouter(router: Router): void {
-    this.routerManager.add(router);
-  }
-
-  public addController(controller: Controller): void {
-    this.controllerManager.add(controller);
   }
 
   public add(item: Router | Controller | Application): void {
@@ -112,15 +90,16 @@ export default class ApplicationManager extends Manager<Application> {
 
     if (item instanceof Router) {
       this.routerManager.add(item);
+      return;
     }
   }
 
   public start(): void {
-    if (!this.application) {
+    if (this.isInitialized() == false) {
       throw new Error("Application is not load properly");
     }
 
-    this.application.start();
+    this.application!.start();
   }
 
   public override setup(): void {
@@ -167,5 +146,12 @@ export default class ApplicationManager extends Manager<Application> {
 
   public getRouterManager(): Manager<Router> {
     return this.routerManager;
+  }
+
+  public isInitialized(): boolean {
+    return this.isInitialize;
+  }
+  public setIsInitialized(value: boolean): void {
+    this.isInitialize = value;
   }
 }

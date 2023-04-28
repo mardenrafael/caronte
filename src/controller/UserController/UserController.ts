@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { HttpMethods } from "../../router/Router/Router";
-import { AbstractController } from "../Controller";
+import { Controller } from "../Controller";
 
-export default class UserController extends AbstractController {
+export default class UserController extends Controller {
   constructor() {
     super(UserController.name);
   }
