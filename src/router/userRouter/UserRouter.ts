@@ -1,9 +1,10 @@
-import Router, { ApplicationRoute, HttpMethods } from "../Router/Router";
+import { Controller } from "../../controller/Controller";
+import Router, { HttpMethods } from "../Router/Router";
 
 export default class UserRouter extends Router {
-  constructor({ basePath, controller }: ApplicationRoute) {
+  constructor(controller: Controller) {
     super({
-      basePath,
+      basePath: "/user",
       controller,
     });
   }
