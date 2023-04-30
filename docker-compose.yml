@@ -1,4 +1,4 @@
-version: "2"
+version: "3.8"
 
 services:
   node-app:
@@ -10,6 +10,19 @@ services:
       - ./src:/opt/app/caronte/src
     ports:
       - 3000
+
+    restart: on-failure
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 45s
+      timeout: 30s
+      retries: 3
+      start_period: 45s
+
+    networks:
+      - caronte-net
+
     command: npm run start:dev
 
   web:
@@ -20,7 +33,13 @@ services:
     ports:
       - 80:80
 
-    command: [nginx, "-g", "daemon off;"]
+    networks:
+      - caronte-net
 
     depends_on:
       - node-app
+
+    command: [nginx, "-g", "daemon off;"]
+
+networks:
+  caronte-net:
