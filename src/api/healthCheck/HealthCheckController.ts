@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Controller } from "../../controller/Controller";
-import { HttpMethods } from "../../router/Router/Router";
+import { HttpMethods } from "../../enum/HttpMethods";
 
 export default class HealthCheckController extends Controller {
   constructor() {

@@ -1,5 +1,6 @@
 import { Controller } from "../../controller/Controller";
-import Router, { HttpMethods } from "../Router/Router";
+import { HttpMethods } from "../../enum/HttpMethods";
+import { Router } from "../Router";
 
 export default class UserRouter extends Router {
   constructor(controller: Controller) {

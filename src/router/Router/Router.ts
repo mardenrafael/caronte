@@ -1,19 +1,12 @@
 import { RequestHandler, Router as R } from "express";
 import { Controller } from "../../controller/Controller";
 import Logger from "../../utils/Logger";
+import { HttpMethods } from "../../enum/HttpMethods";
 
 export type ApplicationRoute = {
   basePath: string;
   controller: Controller;
 };
-
-export enum HttpMethods {
-  GET,
-  POST,
-  PUT,
-  PATCH,
-  DELETE,
-}
 
 export type EndpointDescriptor = {
   method: HttpMethods;

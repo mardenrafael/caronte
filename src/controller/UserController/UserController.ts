@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { HttpMethods } from "../../router/Router/Router";
 import { Controller } from "../Controller";
+import { HttpMethods } from "../../enum/HttpMethods";
 
 export default class UserController extends Controller {
   constructor() {

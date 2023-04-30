@@ -1,7 +1,6 @@
+import { ApplicationManager, Manager } from ".";
 import Application from "../Application";
 import { Router } from "../router/Router";
-import ApplicationManager from "./ApplicationManager";
-import Manager from "./Manager";
 
 export default class RouterManager extends Manager<Router> {
   private static instance: RouterManager;
