@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { HttpMethods } from "../../router/Router/Router";
+import { HttpMethods } from "../../enum/HttpMethods";
 
 export type RequestHandlerDescriptor = {
   handler: RequestHandler;

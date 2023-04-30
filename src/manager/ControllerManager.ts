@@ -1,5 +1,5 @@
+import { Manager } from ".";
 import { Controller } from "../controller/Controller";
-import Manager from "./Manager";
 
 export default class ControllerManager extends Manager<Controller> {
   private static controllerManagerInstance: ControllerManager;

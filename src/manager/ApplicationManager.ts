@@ -3,11 +3,8 @@ import morgan from "morgan";
 import Application from "../Application";
 import { Controller } from "../controller/Controller";
 import { Router } from "../router/Router";
-import Logger from "../utils/Logger";
-import ControllerManager from "./ControllerManager";
-import Manager from "./Manager";
-import RouterManager from "./RouterManager";
-import EnvLoader from "../utils/EnvLoader";
+import { ControllerManager, Manager, RouterManager } from ".";
+import { Logger, EnvLoader } from "../utils";
 
 export default class ApplicationManager extends Manager<Application> {
   private static instance: ApplicationManager;
