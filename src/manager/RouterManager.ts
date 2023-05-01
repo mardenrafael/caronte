@@ -1,5 +1,5 @@
 import { ApplicationManager, Manager } from ".";
-import Application from "../bin/Application";
+import { Application } from "../bin";
 import { Router } from "../router/Router";
 
 export default class RouterManager extends Manager<Router> {

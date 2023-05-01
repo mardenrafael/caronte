@@ -3,7 +3,7 @@ import morgan from "morgan";
 import { Application } from "../bin";
 import { Controller } from "../controller/Controller";
 import { Router } from "../router/Router";
-import { ControllerManager, Manager, RouterManager } from ".";
+import { ControllerManager, RouterManager, Manager } from ".";
 import { Logger, EnvLoader } from "../utils";
 
 export default class ApplicationManager extends Manager<Application> {

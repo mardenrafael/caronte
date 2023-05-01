@@ -26,7 +26,7 @@ export default abstract class Manager<T> {
     return this.applicationInstance;
   }
 
-  public getManaged(): T[] {
+  public getManaged(): T[] | undefined {
     return this.managed;
   }
 }
