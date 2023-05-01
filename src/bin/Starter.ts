@@ -1,4 +1,4 @@
-import Application from "../Application";
+import Application from "./Application";
 import ApplicationManager from "../manager/ApplicationManager";
 import Manager from "../manager/Manager";
 

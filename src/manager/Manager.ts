@@ -1,4 +1,4 @@
-import Application from "../Application";
+import Application from "../bin/Application";
 
 export default abstract class Manager<T> {
   private applicationInstance: Application | undefined;
