@@ -1,9 +1,11 @@
-import Application from "../../src/Application";
-import UserController from "../../src/controller/UserController/UserController";
-import ApplicationManager from "../../src/manager/ApplicationManager";
-import ControllerManager from "../../src/manager/ControllerManager";
-import Manager from "../../src/manager/Manager";
-import RouterManager from "../../src/manager/RouterManager";
+import { Application } from "../../src/bin";
+import { UserController } from "../../src/controller/UserController";
+import {
+  ApplicationManager,
+  ControllerManager,
+  Manager,
+  RouterManager,
+} from "../../src/manager";
 import UserRouter from "../../src/router/userRouter/UserRouter";
 
 describe("ApplicationManager: ", () => {
@@ -62,10 +64,7 @@ describe("ApplicationManager: ", () => {
 
   it("Chamando o método add com Router o routerManager.add deve ser chamado", () => {
     const manager = ApplicationManager.getApplicationManagerInstance();
-    const userRouterFake = new UserRouter({
-      basePath: "",
-      controller: new UserController(),
-    });
+    const userRouterFake = new UserRouter(new UserController());
 
     const routerManager = manager.getRouterManager() as RouterManager;
     const sizeBefore = routerManager.getManaged().length;
@@ -126,9 +125,6 @@ describe("ApplicationManager: ", () => {
   });
 
   it("Mount deve ser chamado 1 vez", () => {
-    // const setupMethod = jest.fn().mockImplementation(() => {
-    //   return;
-    // });
     const mockMethod = jest.fn().mockImplementation(() => {
       return;
     });
