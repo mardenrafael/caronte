@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: development
     container_name: caronte
     volumes:
       - ./src:/opt/app/caronte/src
