@@ -1,6 +1,6 @@
 import { json } from "express";
 import morgan from "morgan";
-import Application from "../bin/Application";
+import { Application } from "../bin";
 import { Controller } from "../controller/Controller";
 import { Router } from "../router/Router";
 import { ControllerManager, Manager, RouterManager } from ".";

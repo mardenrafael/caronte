@@ -1,10 +1,12 @@
 import * as dotenv from "dotenv";
 import { UserController } from "./controller/UserController";
-import ApplicationManager from "./manager/ApplicationManager";
-import UserRouter from "./router/userRouter/UserRouter";
-import HealthCheckController from "./api/healthCheck/HealthCheckController";
-import HealthCheckRouter from "./api/healthCheck/HealthCheckRouter";
-import Starter from "./bin/Starter";
+import { ApplicationManager } from "./manager";
+import { UserRouter } from "./router/userRouter";
+import {
+  HealthCheckRouter,
+  HealthCheckController,
+} from "./api/healthCheck";
+import { Starter } from "./bin";
 
 dotenv.config();
 
