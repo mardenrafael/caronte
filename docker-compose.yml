@@ -9,8 +9,6 @@ services:
     container_name: caronte
     volumes:
       - ./src:/opt/app/caronte/src
-    ports:
-      - 3000
 
     restart: on-failure
 
