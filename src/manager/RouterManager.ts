@@ -20,7 +20,7 @@ export default class RouterManager extends Manager<Router> {
     return this.instance;
   }
 
-  public override add(router: Router) {
+  public override add(router: Router): void {
     this.managed.push(router);
   }
 
