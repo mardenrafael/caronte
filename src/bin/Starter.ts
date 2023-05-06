@@ -19,7 +19,7 @@ export default class Starter {
       this.applicationManager.load();
       this.applicationManager.start();
     } else {
-      throw new Error("ApplicationManager not load properly");
+      throw new Error("Error on start aplication");
     }
   }
 }
