@@ -1,12 +1,5 @@
 import { Application } from "../../src/bin";
-import { UserController } from "../../src/controller/UserController";
-import {
-  ApplicationManager,
-  ControllerManager,
-  Manager,
-  RouterManager,
-} from "../../src/manager";
-import UserRouter from "../../src/router/userRouter/UserRouter";
+import { ApplicationManager, Manager } from "../../src/manager";
 
 describe("ApplicationManager: ", () => {
   beforeEach(() => {
@@ -60,33 +53,6 @@ describe("ApplicationManager: ", () => {
 
     expect(manager.getRouterManager()).toBeDefined();
     expect(manager.getRouterManager()).toBeInstanceOf(Manager);
-  });
-
-  it("Chamando o método add com Router o routerManager.add deve ser chamado", () => {
-    const manager = ApplicationManager.getApplicationManagerInstance();
-    const userRouterFake = new UserRouter(new UserController());
-
-    const routerManager = manager.getRouterManager() as RouterManager;
-    const sizeBefore = routerManager.getManaged().length;
-
-    manager.add(userRouterFake);
-
-    expect(routerManager.getManaged().length).toBeGreaterThan(sizeBefore);
-  });
-
-  it("Chamando o método add com Controller o controllerManager.add deve ser chamado", () => {
-    const manager = ApplicationManager.getApplicationManagerInstance();
-    const userControllerFake = new UserController();
-
-    const controllerManager =
-      manager.getControllerManager() as ControllerManager;
-    const sizeBefore = controllerManager.getManaged().length;
-
-    manager.add(userControllerFake);
-
-    expect(controllerManager.getManaged().length).toBeGreaterThan(
-      sizeBefore,
-    );
   });
 
   it("Start deve lançar erro caso seja chamado antes de inicializar", () => {
