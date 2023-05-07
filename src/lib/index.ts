@@ -1,4 +1,4 @@
 import Request from "./Request";
-import HandlerDescriptor from "./RequestHandler";
+import HandlerDescriptor from "./HandlerDescriptor";
 
 export { Request, HandlerDescriptor };
