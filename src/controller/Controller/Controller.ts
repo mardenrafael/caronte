@@ -1,8 +1,8 @@
-import { RequestHandler } from "express";
 import { HttpMethods } from "../../enum/HttpMethods";
+import { HandlerDescriptor } from "../../lib";
 
 export type RequestHandlerDescriptor = {
-  handler: RequestHandler;
+  handlerDescriptor: HandlerDescriptor;
   method: HttpMethods;
   handlerName: String;
   parameters?: String;
@@ -17,7 +17,7 @@ export default abstract class Controller {
     this.name = name;
   }
 
-  public getHandler(method: HttpMethods): RequestHandler {
+  public getHandler(method: HttpMethods): HandlerDescriptor {
     let foundHandler;
 
     for (const handler of this.definedHandlers) {
@@ -28,13 +28,13 @@ export default abstract class Controller {
     }
 
     if (!foundHandler) {
-      throw new Error("Endpoint not available or does not exist");
+      throw new Error("Handler not available or does not exist");
     }
 
-    return foundHandler.handler;
+    return foundHandler.handlerDescriptor;
   }
 
-  public getHandlerByName(handlerName: String): RequestHandler {
+  public getHandlerByName(handlerName: String): HandlerDescriptor {
     let foundHandler;
 
     for (const handlerDescriptor of this.definedHandlers) {
@@ -45,10 +45,10 @@ export default abstract class Controller {
     }
 
     if (!foundHandler) {
-      throw new Error("Endpoint not available or does not exist");
+      throw new Error("Handler not available or does not exist");
     }
 
-    return foundHandler.handler;
+    return foundHandler.handlerDescriptor;
   }
 
   protected addHandler(

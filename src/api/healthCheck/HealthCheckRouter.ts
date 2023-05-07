@@ -12,7 +12,7 @@ export default class HealthCheckRouter extends Router {
 
   public override setupRoutes(): void {
     this.addEndpoint({
-      handler: this.controller.getHandlerByName("check"),
+      handlerDescriptor: this.controller.getHandlerByName("check"),
       method: HttpMethods.GET,
       path: "",
     });
