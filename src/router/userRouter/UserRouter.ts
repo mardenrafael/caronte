@@ -14,12 +14,12 @@ export default class UserRouter extends Router {
     super.addEndpoint({
       method: HttpMethods.GET,
       path: "",
-      handler: this.controller.getHandlerByName("getUser"),
+      handlerDescriptor: this.controller.getHandlerByName("getUser"),
     });
     super.addEndpoint({
       method: HttpMethods.POST,
       path: "",
-      handler: this.controller.getHandlerByName("getUserbyId"),
+      handlerDescriptor: this.controller.getHandlerByName("getUserbyId"),
     });
   }
 }

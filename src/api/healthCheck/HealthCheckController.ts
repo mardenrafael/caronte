@@ -15,7 +15,9 @@ export default class HealthCheckController extends Controller {
 
   public override setupHandlers(): void {
     this.addHandler({
-      handler: this.check,
+      handlerDescriptor: {
+        handler: this.check,
+      },
       handlerName: "check",
       method: HttpMethods.GET,
     });

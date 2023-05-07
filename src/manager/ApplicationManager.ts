@@ -1,9 +1,9 @@
+import { ControllerManager, RouterManager, Manager } from ".";
 import { json } from "express";
 import morgan from "morgan";
 import { Application } from "../bin";
 import { Controller } from "../controller/Controller";
 import { Router } from "../router/Router";
-import { ControllerManager, RouterManager, Manager } from ".";
 import { Logger, EnvLoader } from "../utils";
 
 export default class ApplicationManager extends Manager<Application> {
@@ -83,7 +83,7 @@ export default class ApplicationManager extends Manager<Application> {
     }
   }
 
-  public add(item: Router | Controller | Application): void {
+  public override add<U = Router | Controller>(item: U): void {
     if (item instanceof Controller) {
       this.controllerManager.add(item);
       return;

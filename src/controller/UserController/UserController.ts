@@ -21,12 +21,16 @@ export default class UserController extends Controller {
 
   public override setupHandlers(): void {
     this.addHandler({
-      handler: this.getUser,
+      handlerDescriptor: {
+        handler: this.getUser,
+      },
       method: HttpMethods.GET,
       handlerName: "getUser",
     });
     this.addHandler({
-      handler: this.getUserbyId,
+      handlerDescriptor: {
+        handler: this.getUserbyId,
+      },
       method: HttpMethods.POST,
       handlerName: "getUserbyId",
     });
