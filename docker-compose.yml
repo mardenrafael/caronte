@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
+      target: production
     container_name: caronte
     volumes:
       - ./src:/opt/app/caronte/src
@@ -25,7 +25,7 @@ services:
     depends_on:
       - redis
 
-    command: npm run start:dev
+    command: npm run start
 
   web:
     image: nginx
