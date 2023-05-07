@@ -22,6 +22,9 @@ services:
     networks:
       - caronte-net
 
+    depends_on:
+      - redis
+
     command: npm run start:dev
 
   web:
@@ -32,13 +35,23 @@ services:
     ports:
       - 80:80
 
-    networks:
-      - caronte-net
-
     depends_on:
       - node-app
 
+    networks:
+      - caronte-net
+
     command: [nginx, "-g", "daemon off;"]
+
+  redis:
+    image: redis
+    container_name: redis
+
+    ports:
+      - 6379:6379
+
+    networks:
+      - caronte-net
 
 networks:
   caronte-net:
