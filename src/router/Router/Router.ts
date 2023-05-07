@@ -1,7 +1,8 @@
-import { RequestHandler, Router as R } from "express";
+import { Router as R } from "express";
 import { Controller } from "../../controller/Controller";
 import Logger from "../../utils/Logger";
 import { HttpMethods } from "../../enum/HttpMethods";
+import { HandlerDescriptor } from "../../lib";
 
 export type ApplicationRoute = {
   basePath: string;
@@ -11,7 +12,7 @@ export type ApplicationRoute = {
 export type EndpointDescriptor = {
   method: HttpMethods;
   path: string;
-  handler: RequestHandler;
+  handlerDescriptor: HandlerDescriptor;
 };
 
 export default abstract class Router {
@@ -37,36 +38,40 @@ export default abstract class Router {
     );
   }
 
-  private define({ method, path, handler }: EndpointDescriptor): void {
+  private define({
+    method,
+    path,
+    handlerDescriptor,
+  }: EndpointDescriptor): void {
     if (method == HttpMethods.GET) {
-      this.router.get(this.basePath + path, handler);
+      this.router.get(this.basePath + path, handlerDescriptor.handler);
       return;
     }
     if (method == HttpMethods.POST) {
-      this.router.post(this.basePath + path, handler);
+      this.router.post(this.basePath + path, handlerDescriptor.handler);
       return;
     }
     if (method == HttpMethods.PUT) {
-      this.router.put(this.basePath + path, handler);
+      this.router.put(this.basePath + path, handlerDescriptor.handler);
       return;
     }
     if (method == HttpMethods.PATCH) {
-      this.router.patch(this.basePath + path, handler);
+      this.router.patch(this.basePath + path, handlerDescriptor.handler);
       return;
     }
     if (method == HttpMethods.DELETE) {
-      this.router.delete(this.basePath + path, handler);
+      this.router.delete(this.basePath + path, handlerDescriptor.handler);
       return;
     }
   }
 
   private mount(): void {
-    this.routesToMount.forEach(({ method, path, handler }) => {
+    this.routesToMount.forEach(({ method, path, handlerDescriptor }) => {
       this.logger.log(`Mounting route for ${this.basePath}${path}`);
       this.define({
         method,
         path,
-        handler,
+        handlerDescriptor,
       });
     });
   }

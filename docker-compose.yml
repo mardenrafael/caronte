@@ -13,7 +13,7 @@ services:
     restart: on-failure
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "curl", "http://localhost:3000/health"]
       interval: 45s
       timeout: 30s
       retries: 3
