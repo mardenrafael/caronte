@@ -1,5 +1,5 @@
+import { ApplicationManager } from "../manager";
 import Application from "./Application";
-import ApplicationManager from "../manager/ApplicationManager";
 import Manager from "../manager/Manager";
 import {
   HealthCheckController,
