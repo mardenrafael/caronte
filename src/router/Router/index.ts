@@ -1,3 +1,3 @@
-import Router, { ApplicationRoute, EndpointDescriptor } from "./Router";
+import Router, { ApplicationRouter, EndpointDescriptor } from "./Router";
 
-export { Router, ApplicationRoute, EndpointDescriptor };
+export { Router, ApplicationRouter, EndpointDescriptor };

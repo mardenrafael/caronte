@@ -1,22 +1,18 @@
 import * as dotenv from "dotenv";
-import { Starter } from "./bin";
-import { Controller } from "./controller/Controller";
+import { Resource, Starter } from "./bin";
 import { UserController } from "./controller/UserController";
-import { ApplicationManager } from "./manager";
-import { Router } from "./router/Router";
+import { ResourceManager } from "./manager";
 import { UserRouter } from "./router/userRouter";
 
 dotenv.config();
 
 const starter = new Starter();
 
-const applicationManager: ApplicationManager =
-  ApplicationManager.getApplicationManagerInstance();
+const userResource: Resource = new Resource();
 
-const userController: Controller = new UserController();
-const userRouter: Router = new UserRouter(userController);
+userResource.setController(new UserController());
+userResource.setRouter(new UserRouter());
 
-applicationManager.add(userRouter);
-applicationManager.add(userController);
+ResourceManager.getResourceManagerInstance().add(userResource);
 
 starter.start();

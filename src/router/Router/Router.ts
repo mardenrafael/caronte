@@ -2,11 +2,10 @@ import { Router as R } from "express";
 import { Controller } from "../../controller/Controller";
 import Logger from "../../utils/Logger";
 import { HttpMethods } from "../../enum/HttpMethods";
-import { HandlerDescriptor } from "../../lib";
+import { HandlerDescriptor } from "../../descriptor/handlerDescriptor";
 
-export type ApplicationRoute = {
+export type ApplicationRouter = {
   basePath: string;
-  controller: Controller;
 };
 
 export type EndpointDescriptor = {
@@ -20,13 +19,12 @@ export default abstract class Router {
   private readonly router: R;
   private routesToMount: EndpointDescriptor[] = [];
   private readonly logger: Logger;
-  protected readonly controller: Controller;
+  protected controller!: Controller;
 
-  constructor({ basePath, controller }: ApplicationRoute) {
+  constructor({ basePath }: ApplicationRouter) {
     this.logger = new Logger();
     this.basePath = basePath;
     this.router = R();
-    this.controller = controller;
   }
 
   protected addEndpoint(endpointDescriptor: EndpointDescriptor): void {
@@ -82,4 +80,8 @@ export default abstract class Router {
   }
 
   public abstract setupRoutes(): void;
+
+  public setController(controller: Controller): void {
+    this.controller = controller;
+  }
 }

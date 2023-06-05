@@ -64,7 +64,7 @@ describe("ApplicationManager: ", () => {
 
   it("Chamando o método add com Router o routerManager.add deve ser chamado", () => {
     const manager = ApplicationManager.getApplicationManagerInstance();
-    const userRouterFake = new UserRouter(new UserController());
+    const userRouterFake = new UserRouter();
 
     const routerManager = manager.getRouterManager() as RouterManager;
     const sizeBefore = routerManager.getManaged().length;
