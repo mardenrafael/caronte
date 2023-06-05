@@ -19,13 +19,10 @@ export default class ControllerManager extends Manager<Controller> {
     this.managed.push(controller);
   }
 
-  private setupAllHandlers(): void {
+  public override setup(): void {
     this.managed.forEach(controller => {
       controller.setupHandlers();
     });
-  }
-  public override setup(): void {
-    this.setupAllHandlers();
   }
   public override mount(): void {}
   public override load(): void {}
