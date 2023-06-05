@@ -1,10 +1,11 @@
-import { ApplicationManager } from "../manager";
+import { ApplicationManager, ResourceManager } from "../manager";
 import Application from "./Application";
 import Manager from "../manager/Manager";
 import {
   HealthCheckController,
   HealthCheckRouter,
 } from "../api/healthCheck";
+import Resource from "./Resource";
 
 export default class Starter {
   private readonly applicationManager: Manager<Application>;
@@ -17,12 +18,13 @@ export default class Starter {
   private setupHealthChecker(): void {
     if (this.applicationManager instanceof ApplicationManager) {
       const healthCheckController = new HealthCheckController();
-      const healthCheckRouter = new HealthCheckRouter(
-        healthCheckController,
-      );
+      const healthCheckRouter = new HealthCheckRouter();
+      const healthResource = new Resource();
 
-      this.applicationManager.add(healthCheckController);
-      this.applicationManager.add(healthCheckRouter);
+      healthResource.setRouter(healthCheckRouter);
+      healthResource.setController(healthCheckController);
+
+      ResourceManager.getResourceManagerInstance().add(healthResource);
     } else {
       throw new Error("Error on setup healthchecker");
     }
