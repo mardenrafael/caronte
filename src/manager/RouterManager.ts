@@ -7,9 +7,6 @@ export default class RouterManager extends Manager<Router> {
 
   private constructor() {
     super(RouterManager.name);
-    // this.setApplication(
-    //   ApplicationManager.getApplicationManagerInstance().loadApplicationInstance(),
-    // );
   }
 
   public static getRouterManagerInstance(): RouterManager {
@@ -24,12 +21,6 @@ export default class RouterManager extends Manager<Router> {
     this.managed.push(router);
   }
 
-  private setupRoute(): void {
-    this.managed.forEach(route => {
-      route.setupRoutes();
-    });
-  }
-
   private mountRoutes(application: Application): void {
     this.managed.forEach(route => {
       application.mountRoute(route.export());
@@ -39,7 +30,9 @@ export default class RouterManager extends Manager<Router> {
   public override load(): void {}
 
   public override setup(): void {
-    this.setupRoute();
+    this.managed.forEach(route => {
+      route.setupRoutes();
+    });
   }
   public override mount(): void {
     this.mountRoutes(
