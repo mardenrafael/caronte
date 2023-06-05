@@ -1,5 +1,5 @@
 import { HttpMethods } from "../../enum/HttpMethods";
-import { HandlerDescriptor } from "../../lib";
+import { HandlerDescriptor } from "../../descriptor/handlerDescriptor";
 
 export type RequestHandlerDescriptor = {
   handlerDescriptor: HandlerDescriptor;
