@@ -1,7 +1,12 @@
-import { ControllerManager, RouterManager, Manager } from ".";
+import {
+  ControllerManager,
+  RouterManager,
+  Manager,
+  ResourceManager,
+} from ".";
 import { json } from "express";
 import morgan from "morgan";
-import { Application } from "../bin";
+import { Application, Resource } from "../bin";
 import { Controller } from "../controller/Controller";
 import { Router } from "../router/Router";
 import { Logger, EnvLoader } from "../utils";
@@ -17,6 +22,7 @@ export default class ApplicationManager extends Manager<Application> {
   private isConfigured: Boolean = false;
   private readonly controllerManager: Manager<Controller>;
   private readonly routerManager: Manager<Router>;
+  private readonly resourceManager: Manager<Resource>;
 
   private constructor() {
     super(ApplicationManager.name);
@@ -24,6 +30,7 @@ export default class ApplicationManager extends Manager<Application> {
     this.controllerManager =
       ControllerManager.getControlllerManagerInstance();
     this.routerManager = RouterManager.getRouterManagerInstance();
+    this.resourceManager = ResourceManager.getResourceManagerInstance();
   }
 
   public static getApplicationManagerInstance(): ApplicationManager {
@@ -83,7 +90,7 @@ export default class ApplicationManager extends Manager<Application> {
     }
   }
 
-  public override add<U = Router | Controller>(item: U): void {
+  public override add<U = Router | Controller | Resource>(item: U): void {
     if (item instanceof Controller) {
       this.controllerManager.add(item);
       return;
@@ -92,6 +99,10 @@ export default class ApplicationManager extends Manager<Application> {
     if (item instanceof Router) {
       this.routerManager.add(item);
       return;
+    }
+
+    if (item instanceof Resource) {
+      this.resourceManager.add(item);
     }
   }
 
@@ -104,13 +115,17 @@ export default class ApplicationManager extends Manager<Application> {
   }
 
   public override setup(): void {
+    this.resourceManager.setup();
     this.controllerManager.setup();
     this.routerManager.setup();
   }
   public override mount(): void {
+    this.resourceManager.mount();
+    this.controllerManager.mount();
     this.routerManager.mount();
   }
   public override load(): void {
+    this.resourceManager.load();
     this.controllerManager.load();
     this.routerManager.load();
   }
