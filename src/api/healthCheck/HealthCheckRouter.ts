@@ -1,12 +1,10 @@
-import { Controller } from "../../controller/Controller";
 import { HttpMethods } from "../../enum/HttpMethods";
 import { Router } from "../../router/Router";
 
 export default class HealthCheckRouter extends Router {
-  constructor(controller: Controller) {
+  constructor() {
     super({
       basePath: "/health",
-      controller,
     });
   }
 
